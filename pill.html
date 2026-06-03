@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: transparent;
+        overflow: hidden;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: grab;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+      #pill {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 100%;
+        box-sizing: border-box;
+        padding: 0 14px;
+        background: rgba(20, 22, 28, 0.92);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 24px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+        font-size: 14px;
+        font-weight: 600;
+        backdrop-filter: blur(12px);
+        transition: background 0.12s, border-color 0.12s;
+      }
+      #pill:hover {
+        background: rgba(43, 140, 255, 0.96);
+        border-color: rgba(43, 140, 255, 1);
+      }
+      #pill:active {
+        cursor: grabbing;
+      }
+      #pill .ico {
+        font-size: 16px;
+      }
+      #pill .lbl {
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pill" title="Cliquez pour débloquer · glissez pour déplacer">
+      <span class="ico">🔒</span><span class="lbl">Débloquer</span>
+    </div>
+    <script src="pill.js"></script>
+  </body>
+</html>

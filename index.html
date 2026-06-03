@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ça téléprompt</title>
+
+    <!-- Polices (Lexend par défaut) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600;700&family=Montserrat:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- ===== Barre de contrôle (déplaçable) ===== -->
+      <div id="bar">
+        <div class="group">
+          <button id="playBtn" class="btn primary" title="Lecture / Pause (Espace)">
+            <span class="ico">▶</span><span class="lbl">Lecture</span>
+          </button>
+        </div>
+
+        <div class="group seg" id="modeGroup" title="Mode de défilement">
+          <button data-mode="manual" class="seg-btn active">Manuel</button>
+          <button data-mode="voice" class="seg-btn">🎙 Voix</button>
+        </div>
+
+        <div class="group" id="speedGroup">
+          <label>Vitesse</label>
+          <input id="speed" type="range" min="5" max="150" step="1" value="40" />
+        </div>
+
+        <div class="group" id="voiceGroup" style="display: none">
+          <label>Micro</label>
+          <div class="meter"><div id="meterFill"></div></div>
+          <span id="voiceState" class="pill">silence</span>
+        </div>
+
+        <div class="group">
+          <label>Taille</label>
+          <button id="fontMinus" class="btn sm" title="Réduire (-)">A−</button>
+          <span id="fontVal" class="val">44</span>
+          <button id="fontPlus" class="btn sm" title="Agrandir (+)">A+</button>
+        </div>
+
+        <div class="group">
+          <label>Police</label>
+          <select id="font">
+            <option value="Lexend">Lexend</option>
+            <option value="Inter">Inter</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Roboto">Roboto</option>
+            <option value="Open Sans">Open Sans</option>
+            <option value="Merriweather">Merriweather (serif)</option>
+            <option value="-apple-system, system-ui">Système</option>
+          </select>
+        </div>
+
+        <div class="group">
+          <label>Opacité fond</label>
+          <input id="opacity" type="range" min="0" max="100" step="1" value="55" />
+        </div>
+
+        <div class="group">
+          <label>Couleur</label>
+          <button id="textColorBtn" class="color-swatch" title="Couleur de tout le texte">
+            <span class="sw" id="textColorSw"></span>
+          </button>
+        </div>
+
+        <div class="group">
+          <label>Opacité texte</label>
+          <input id="textOpacity" type="range" min="20" max="100" step="1" value="100" />
+        </div>
+
+        <div class="group actions">
+          <button id="editBtn" class="btn" title="Modifier le texte (E)">✎ Texte</button>
+          <button id="mirrorBtn" class="btn icon" title="Mode miroir (M)">⇄</button>
+          <button id="topBtn" class="btn icon" title="Revenir en haut (Échap pour stopper)">⤒</button>
+          <div class="settings-wrap">
+            <button id="settingsBtn" class="btn icon" title="Réglages d'affichage">⚙</button>
+          </div>
+          <button id="lockBtn" class="btn icon" title="Verrouiller (clic-à-travers) — une pastille « Débloquer » apparaîtra">🔓</button>
+          <button id="closeBtn" class="btn icon danger" title="Fermer">✕</button>
+        </div>
+      </div>
+
+      <!-- ===== Zone de lecture ===== -->
+      <div id="viewport">
+        <div id="readingLine"></div>
+        <div id="content"></div>
+        <div id="timeReadout" title="Temps restant / total estimé">⏱ 0:00 / 0:00</div>
+        <div id="progressWrap"><div id="progressFill"></div></div>
+        <div id="lockHint">🔒 Verrouillé — cliquez la pastille « Débloquer » (ou ⌘⇧L)</div>
+      </div>
+
+      <!-- ===== Éditeur de script (texte enrichi) ===== -->
+      <div id="editor" class="hidden">
+        <div class="editor-inner">
+          <div class="editor-head">
+            <strong>Votre script</strong>
+            <span class="hint">Sélectionnez du texte pour le mettre en forme. Mettez vos notes entre [crochets] : elles s'affichent en couleur et ne comptent pas dans le minutage.</span>
+          </div>
+
+          <div id="editorToolbar">
+            <button type="button" class="fmt" data-cmd="bold" title="Gras (⌘B)"><b>G</b></button>
+            <button type="button" class="fmt" data-cmd="italic" title="Italique (⌘I)"><i>I</i></button>
+            <button type="button" class="fmt" data-cmd="underline" title="Souligné (⌘U)"><u>S</u></button>
+            <span class="sep"></span>
+            <button type="button" class="fmt color-trigger" id="selColorBtn" title="Couleur du texte sélectionné">
+              <span class="swatch-ico" id="selColorIco">A</span>
+            </button>
+            <button type="button" class="fmt color-trigger" id="selHiliteBtn" title="Surligner le texte sélectionné">
+              <span class="swatch-ico hl" id="selHiliteIco">▍</span>
+            </button>
+            <span class="sep"></span>
+            <button type="button" class="fmt wide" id="clearFmt" title="Effacer la mise en forme">⌫ Format</button>
+            <button type="button" class="fmt wide" id="joinLines" title="Retirer les sauts de ligne inutiles — joint les lignes, garde les paragraphes">↵ Joindre</button>
+          </div>
+
+          <div id="scriptInput" contenteditable="true" spellcheck="false"></div>
+
+          <div class="editor-foot">
+            <span id="wordCount" class="hint">0 mot</span>
+            <div class="spacer"></div>
+            <button id="cancelEdit" class="btn">Annuler</button>
+            <button id="saveEdit" class="btn primary">Enregistrer</button>
+          </div>
+        </div>
+      </div>
+      <!-- Palette de couleurs (popover intégré, remplace le sélecteur natif) -->
+      <div id="palette" class="hidden"></div>
+
+      <!-- Panneau de réglages d'affichage (hors de la barre = hors de la zone
+           « déplacer la fenêtre », sinon les curseurs ne réagissent pas à la souris) -->
+      <div id="settingsPanel" class="panel hidden">
+        <div class="panel-row">
+          <label>Surbrillance de la ligne en cours</label>
+          <button id="focusToggle" class="btn sm toggled">Activée</button>
+        </div>
+        <div class="panel-row">
+          <label>Position de la ligne de lecture</label>
+          <input id="readingPos" type="range" min="2" max="60" step="1" value="38" />
+        </div>
+        <div class="panel-row">
+          <label>Largeur du texte</label>
+          <input id="textWidth" type="range" min="45" max="100" step="1" value="88" />
+        </div>
+        <div class="panel-row">
+          <label>Interligne</label>
+          <input id="lineHeight" type="range" min="11" max="24" step="1" value="15" />
+        </div>
+        <div class="panel-row">
+          <label>Infos de lecture (temps + progression)</label>
+          <button id="infoToggle" class="btn sm toggled">Affichées</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>

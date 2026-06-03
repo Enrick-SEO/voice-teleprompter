@@ -1,0 +1,568 @@
+:root {
+  --font-size: 44px;
+  --font-family: 'Lexend', sans-serif;
+  --panel-alpha: 0.55;
+  --line-height: 1.5;
+  --accent: #2b8cff;
+  --text-color: #ffffff;
+  --text-opacity: 1;
+  --reading-pos: 38%; /* position verticale de la ligne de lecture */
+  --text-width: 88%; /* largeur de la colonne de texte */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  color: #fff;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ===================== Barre de contrôle ===================== */
+#bar {
+  -webkit-app-region: drag; /* la barre permet de déplacer la fenêtre */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 8px 12px;
+  background: rgba(18, 20, 26, 0.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex: 0 0 auto;
+}
+
+#bar .group {
+  -webkit-app-region: no-drag; /* mais pas les boutons */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#bar .group.actions {
+  margin-left: auto;
+}
+
+#bar label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.val {
+  font-size: 12px;
+  min-width: 22px;
+  text-align: center;
+  color: #fff;
+}
+
+/* Boutons */
+.btn {
+  -webkit-app-region: no-drag;
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.12s, border-color 0.12s, transform 0.05s;
+}
+.btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+.btn:active {
+  transform: scale(0.96);
+}
+.btn.sm {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+.btn.icon {
+  padding: 6px 9px;
+  font-size: 14px;
+}
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.btn.primary:hover {
+  background: #1f7af0;
+}
+.btn.danger:hover {
+  background: #c0392b;
+  border-color: #c0392b;
+}
+.btn.toggled {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Segmented control (Manuel / Voix) */
+.seg {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px !important;
+}
+.seg-btn {
+  -webkit-app-region: no-drag;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.seg-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Sliders */
+input[type='range'] {
+  -webkit-app-region: no-drag;
+  -webkit-appearance: none;
+  width: 110px;
+  height: 4px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.22);
+  outline: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+select {
+  -webkit-app-region: no-drag;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+select option {
+  color: #000;
+}
+
+/* Bouton-pastille de couleur (barre du haut) */
+.color-swatch {
+  -webkit-app-region: no-drag;
+  width: 30px;
+  height: 24px;
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+}
+.color-swatch:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.color-swatch .sw {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  background: #fff;
+}
+
+/* Palette de couleurs intégrée (popover) */
+#palette {
+  position: fixed;
+  z-index: 100;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 152px;
+  padding: 8px;
+  background: rgba(24, 27, 34, 0.98);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+#palette.hidden {
+  display: none;
+}
+.pal-swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+.pal-swatch:hover {
+  transform: scale(1.08);
+}
+.pal-swatch.sel {
+  border-color: #fff;
+}
+.pal-swatch.none {
+  background: #2a2d34;
+  position: relative;
+}
+.pal-swatch.none::after {
+  content: '✕';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Indicateur micro */
+.meter {
+  width: 70px;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+#meterFill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #2ecc71, #f1c40f, #e74c3c);
+  transition: width 0.06s linear;
+}
+.pill {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.8);
+}
+.pill.speaking {
+  background: #2ecc71;
+  color: #06270f;
+  font-weight: 600;
+}
+
+/* ===================== Zone de lecture ===================== */
+#viewport {
+  position: relative;
+  flex: 1 1 auto;
+  overflow: hidden;
+  background: rgba(0, 0, 0, var(--panel-alpha));
+}
+
+#content {
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  font-weight: 500;
+  color: var(--text-color);
+  opacity: var(--text-opacity);
+  text-align: center;
+  max-width: var(--text-width);
+  margin: 0 auto;
+  padding: 0 12px;
+  white-space: normal;
+  word-wrap: break-word;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9);
+  will-change: transform;
+}
+
+/* Lignes du script + surbrillance de la ligne en cours */
+#content .line {
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+#content.focus .line {
+  opacity: 0.32;
+}
+#content.focus .line.current {
+  opacity: 1;
+}
+
+/* Didascalies / notes non lues : [entre crochets] */
+.cue {
+  color: #ffb454;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.72em;
+  letter-spacing: 0.01em;
+  opacity: 0.92;
+}
+
+/* Ligne de lecture (repère) */
+#readingLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--reading-pos);
+  height: 0;
+  border-top: 2px solid rgba(43, 140, 255, 0.55);
+  box-shadow: 0 0 12px rgba(43, 140, 255, 0.5);
+  pointer-events: none;
+  z-index: 5;
+}
+#readingLine::before,
+#readingLine::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+}
+#readingLine::before {
+  left: 0;
+  border-left: 9px solid rgba(43, 140, 255, 0.85);
+}
+#readingLine::after {
+  right: 0;
+  border-right: 9px solid rgba(43, 140, 255, 0.85);
+}
+
+/* Temps de lecture (bas-gauche) */
+#timeReadout {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.4);
+  padding: 3px 10px;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* Barre de progression (bord bas) */
+#progressWrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  z-index: 6;
+  pointer-events: none;
+}
+#progressFill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(43, 140, 255, 0.7);
+}
+#timeReadout.hidden,
+#progressWrap.hidden {
+  display: none;
+}
+
+/* Menu réglages (popover sous le bouton ⚙) */
+.settings-wrap {
+  position: relative;
+  -webkit-app-region: no-drag;
+  display: inline-flex;
+}
+#settingsPanel {
+  position: fixed; /* hors flux + hors barre : coordonnées posées par le JS */
+  width: 280px;
+  background: rgba(24, 27, 34, 0.98);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+#settingsPanel.hidden {
+  display: none;
+}
+.panel-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.panel-row label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.55);
+}
+.panel-row input[type='range'] {
+  width: 100%;
+}
+.panel-row .btn.sm {
+  align-self: flex-start;
+}
+
+/* En mode verrouillé : on masque toute la barre du haut pour ne rien gêner.
+   La fenêtre devient « clic-à-travers » : on voit et on clique ce qu'il y a derrière. */
+body.locked #bar {
+  display: none;
+}
+body.locked #timeReadout {
+  display: none; /* le temps gêne la vue en mode verrouillé */
+}
+
+#lockHint {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.75);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none; /* ne bloque jamais l'interaction */
+  z-index: 10;
+}
+/* l'indice apparaît brièvement puis s'efface tout seul */
+body.locked #lockHint {
+  animation: lockHintFade 4.5s ease forwards;
+}
+@keyframes lockHintFade {
+  0% { opacity: 0; }
+  8% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ===================== Éditeur ===================== */
+#editor {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 12, 16, 0.97);
+  z-index: 50;
+  display: flex;
+  padding: 18px;
+}
+#editor.hidden {
+  display: none;
+}
+.editor-inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
+}
+.editor-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.editor-head .hint,
+.hint {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+/* Barre d'outils de mise en forme */
+#editorToolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+#editorToolbar .fmt {
+  -webkit-app-region: no-drag;
+  min-width: 34px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  border-radius: 7px;
+  font-size: 15px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+#editorToolbar .fmt:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+#editorToolbar .fmt.wide {
+  font-size: 12px;
+  gap: 4px;
+}
+#editorToolbar .sep {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.16);
+  margin: 0 4px;
+}
+.color-trigger .swatch-ico {
+  font-weight: 700;
+  font-size: 15px;
+  pointer-events: none;
+  color: #2b8cff;
+}
+.color-trigger .swatch-ico.hl {
+  color: #ffe14d;
+}
+
+#scriptInput {
+  -webkit-app-region: no-drag;
+  flex: 1;
+  overflow-y: auto;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.6;
+  padding: 14px;
+  font-family: 'Lexend', sans-serif;
+  white-space: normal;
+  -webkit-user-select: text;
+  user-select: text;
+}
+#scriptInput:empty::before {
+  content: 'Collez ici le script de votre vidéo…';
+  color: rgba(255, 255, 255, 0.35);
+}
+#scriptInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.editor-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.editor-foot .spacer {
+  flex: 1;
+}

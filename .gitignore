@@ -1,0 +1,17 @@
+# Dépendances (réinstallées automatiquement via `npm install`)
+node_modules/
+
+# Application construite (regénérée via `npm run package`)
+dist/
+
+# Fichiers intermédiaires de l'icône (icon.icns suffit ; regénérables)
+assets/icon.iconset/
+
+# Configuration locale de l'assistant Claude (ne pas partager)
+.claude/
+
+# Fichiers système macOS
+.DS_Store
+
+# Journaux
+*.log
