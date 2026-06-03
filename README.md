@@ -1,110 +1,129 @@
-# 🎬 Ça téléprompt
+**English** · [Français](README.fr.md)
 
-Une fenêtre flottante, transparente et toujours au-dessus des autres apps, pour lire un script vidéo face caméra — avec **défilement automatique au micro** (le texte avance quand vous parlez, se met en pause quand vous faites une pause).
+# 🎬 Ça téléprompt — voice teleprompter for macOS
 
----
+A floating, transparent, always-on-top teleprompter to read a video script straight to camera — with **hands-free voice scrolling** (the text advances while you speak and pauses when you pause).
 
-## 🚀 Lancer l'application
-
-**Le plus simple :** double-cliquez sur l'icône **« Ça téléprompt »** sur votre **Bureau**.
-> La toute première fois : **clic droit → Ouvrir** (pour passer l'avertissement macOS), puis macOS demandera l'accès au **microphone** → **acceptez** (nécessaire pour le défilement vocal). Ensuite, un simple double-clic suffit.
-
-**Autres façons de lancer** (depuis ce dossier) :
-- Double-cliquez sur `Lancer le téléprompteur.command` (mode développement)
-- Ou en terminal : `npm install` (1re fois) puis `npm start`
-
-> Si vous refusez le micro par erreur : *Réglages Système → Confidentialité et sécurité → Microphone* → activez « Ça téléprompt ».
-
-### 🔁 Mettre à jour l'app du Bureau
-Si l'outil est modifié, double-cliquez sur **`Reconstruire l'app.command`** : il repackage « Ça téléprompt » et le replace à jour sur votre Bureau.
+> ℹ️ The app's interface is in **French** (it was built for a French-speaking creator). This README is available in [English](README.md) and [Français](README.fr.md).
 
 ---
 
-## 🎛️ Fonctionnalités
+## ✨ Highlights
 
-| Fonction | Comment |
+- **Transparent, always-on-top window** — see (and click) whatever is behind it.
+- **Voice scrolling** — listens to your mic; scrolls while you talk, pauses on silence.
+- **Manual mode** — constant, adjustable scroll speed.
+- **Rich-text scripts** — bold, italic, underline, text color, highlighter.
+- **Reading aids** — current-line highlight, estimated reading time + progress bar, and "stage directions" you don't read aloud.
+- **Click-through lock** — hides the toolbar and lets clicks pass through to the app behind, with a draggable **"Unlock" pill** to come back.
+- **100% local** — no data leaves your machine (apart from the initial Google Fonts download).
+
+---
+
+## 🚀 Getting started
+
+The app is **not on the App Store** — you build it locally (this is normal and avoids Gatekeeper warnings).
+
+**Requirements:** **macOS** + **[Node.js](https://nodejs.org)** (≥ 18).
+
+```bash
+npm install        # install dependencies (Electron is pinned to v33 — see note below)
+npm start          # run in development mode
+npm run package    # build "Ça téléprompt.app" into dist/
+```
+
+The easiest way to get a double-clickable app: run **`Reconstruire l'app.command`** ("Rebuild the app" — double-click it). It builds, ad-hoc signs, and copies **`Ça téléprompt.app`** to your Desktop.
+
+On first launch, macOS asks for **microphone** access → **allow it** (required for voice scrolling). If you used a packaged `.app` from someone else: right-click → **Open** the first time.
+
+> 🤖 Sharing with someone who uses an AI assistant (Claude, etc.)? Send them this repo — `CLAUDE.md` tells the assistant exactly how to install and build it.
+
+---
+
+## 🎛️ Features
+
+| Feature | How |
 |---|---|
-| **Coller / mettre en forme votre script** | Bouton **✎ Texte** → collez votre texte, mettez-le en forme → **Enregistrer** |
-| **Transparence du fond** | Curseur **Opacité fond** (0 % = totalement transparent, vous voyez tout derrière) |
-| **Couleur du texte** | Sélecteur **Couleur** dans la barre (couleur par défaut de tout le texte) |
-| **Transparence du texte** | Curseur **Opacité texte** |
-| **Taille du texte** | Boutons **A− / A+** (ou touches `+` / `−`) |
-| **Police** | Menu **Police** — **Lexend** par défaut (+ Inter, Montserrat, Roboto, etc.) |
-| **Défilement automatique (voix)** | Mode **🎙 Voix** : le texte avance pendant que vous parlez, se met en pause quand vous vous arrêtez |
-| **Vitesse** | Curseur **Vitesse** (allure constante en Manuel ; allure pendant que vous parlez en Voix) |
-| **Mode miroir** | Bouton **⇄** (pour les téléprompteurs à vitre/réflexion) |
-| **Mode verrouillé (clic-à-travers)** | Bouton **🔓** ou `⌘⇧L` : **masque toute la barre**, rend la fenêtre transparente aux clics |
-| **Surbrillance ligne en cours** | Menu **⚙** : la ligne lue reste nette, le reste est atténué |
-| **Temps de lecture + progression** | Affichés en bas (⏱ restant / total) — basés sur le nombre de mots |
-| **Didascalies (notes non lues)** | Mettez vos notes entre `[crochets]` : affichées en orange, exclues du minutage |
-| **Position de la ligne / largeur / interligne** | Menu **⚙** : réglages d'affichage |
-| **Déplacer la fenêtre** | Glissez la **barre du haut** |
-| **Redimensionner** | Tirez les **bords** de la fenêtre |
+| **Paste / format your script** | **✎ Texte** button → paste your text, format it → **Enregistrer** (Save) |
+| **Background transparency** | **Opacité fond** slider (0% = fully transparent, you see everything behind) |
+| **Text color** | **Couleur** picker in the toolbar (default color of the whole text) |
+| **Text transparency** | **Opacité texte** slider |
+| **Text size** | **A− / A+** buttons (or `+` / `−` keys) |
+| **Font** | **Police** menu — **Lexend** by default (+ Inter, Montserrat, Roboto, etc.) |
+| **Auto-scroll (voice)** | **🎙 Voix** mode: the text advances while you speak, pauses when you stop |
+| **Speed** | **Vitesse** slider (constant in Manual; pace-while-speaking in Voice) |
+| **Mirror mode** | **⇄** button (for beam-splitter / reflective teleprompters) |
+| **Click-through lock** | **🔓** button or `⌘⇧L`: **hides the whole toolbar**, makes the window click-through |
+| **Current-line highlight** | **⚙** menu: the line being read stays sharp, the rest is dimmed |
+| **Reading time + progress** | Shown at the bottom (⏱ remaining / total) — based on word count |
+| **Stage directions (not read)** | Put notes in `[brackets]`: shown in orange, excluded from timing |
+| **Reading-line position / width / line height** | **⚙** menu: display settings |
+| **Move the window** | Drag the **top bar** |
+| **Resize** | Drag the **window edges** |
 
-### ✍️ Mise en forme du texte (éditeur)
-Dans **✎ Texte**, sélectionnez un mot ou une phrase puis utilisez la barre d'outils :
-- **G** gras · **I** italique · **S** souligné
-- **A** (couleur) : colore le texte sélectionné · **▍** (surligneur) : surligne le texte sélectionné
-- **⌫ Format** : efface la mise en forme de la sélection
-- **↵ Joindre** : retire les sauts de ligne inutiles (ceux du copier-coller) en joignant les lignes, **tout en gardant les paragraphes** (séparés par une ligne vide). Annulable avec `⌘Z`.
+### ✍️ Text formatting (editor)
+In **✎ Texte**, select a word or sentence then use the toolbar:
+- **G** bold · **I** italic · **S** underline
+- **A** (color): colors the selected text · **▍** (highlighter): highlights the selected text
+- **⌫ Format**: clears formatting from the selection
+- **↵ Joindre** ("Join lines"): removes unnecessary line breaks (the ones from copy-paste) by joining lines together, **while keeping paragraphs** (separated by a blank line). Undo with `⌘Z`.
 
-> 💡 Le collage colle toujours en **texte brut** (sans la mise en forme d'origine). Pour nettoyer un texte déjà collé : **↵ Joindre** (sauts de ligne) et/ou **⌫ Format** (couleurs/gras).
+> 💡 Pasting always inserts **plain text** (no imported formatting). To clean up already-pasted text: **↵ Joindre** (line breaks) and/or **⌫ Format** (colors/bold).
 
-Vous pouvez ainsi mettre en évidence les mots à accentuer, les transitions, etc. La mise en forme est enregistrée avec le script.
+### 🎯 Reading aids (⚙ menu)
 
-### 🎯 Aides à la lecture (menu ⚙)
+- **Stage directions / unread notes** — write your shooting cues in **brackets**, e.g. `[show the screen]`, `[zoom on the cart]`. They appear in **italic orange** (easy to spot without reading them aloud) and **don't count** toward the reading time.
+- **Current-line highlight** — the line at the reading marker stays sharp while the others dim slightly, so you never lose your place. (Toggle in **⚙**.)
+- **Reading time + progress bar** — bottom-left: estimated **⏱ remaining / total** (≈ 150 wpm) and a progress bar along the bottom edge.
+- **Reading-line position** — place the marker higher or lower (all the way to the top of the window, to stay close to the camera).
+- **Text width** — narrow it for shorter lines (smoother reading, less eye sweep).
+- **Line height** — spacing between lines.
 
-- **Didascalies / notes non lues** — écrivez vos indications de tournage entre **crochets**, par ex. `[montrer l'écran]`, `[zoom sur le panier]`. Elles s'affichent en **orange italique** (vous les repérez d'un coup d'œil sans les lire à voix haute) et **ne comptent pas** dans le temps de lecture.
-- **Surbrillance de la ligne en cours** — la ligne au niveau du repère reste bien nette, les autres sont légèrement atténuées → vous ne perdez jamais votre place. (Activable/désactivable dans **⚙**.)
-- **Temps de lecture + barre de progression** — en bas à gauche : **⏱ temps restant / temps total** estimés (≈ 150 mots/min), et une barre de progression sur le bord bas. Masquables dans **⚙**.
-- **Position de la ligne de lecture** — placez le repère plus haut ou plus bas selon votre confort.
-- **Largeur du texte** — réduisez la largeur pour des lignes plus courtes (lecture plus fluide, moins de balayage des yeux).
-- **Interligne** — espacement entre les lignes.
+### 🔒 Locked mode (click-through)
+When you lock (**🔓** button or `⌘⇧L`): **the whole top bar disappears** and the window becomes **click-through** — you see the windows behind perfectly and click "through" the app (editor, browser…) without it getting in the way, while the script stays visible.
 
-### 🔒 Mode verrouillé
-Quand vous activez le verrou (bouton **🔓** ou `⌘⇧L`) : **toute la barre du haut disparaît**, et la fenêtre devient **transparente aux clics** — vous voyez parfaitement les fenêtres derrière et vous cliquez « à travers » l'app (montage, navigateur…) sans qu'elle gêne, tout en gardant le script affiché.
+To unlock, a small **"Débloquer" (Unlock) pill** appears (top-right of the screen by default):
+- **Click it** to unlock.
+- **Drag it** to move it anywhere (e.g. out of your recording frame).
+- The **`⌘⇧L`** shortcut still works as a fallback.
 
-Pour déverrouiller, une petite **pastille « Débloquer »** apparaît (par défaut en haut à droite de l'écran) :
-- **Cliquez-la** pour déverrouiller.
-- **Glissez-la** pour la déplacer où vous voulez (par ex. hors du cadre de votre enregistrement).
-- Le raccourci **`⌘⇧L`** fonctionne toujours en secours.
+### The two scrolling modes
 
-### Les deux modes de défilement
-
-- **🎙 Voix (automatique)** — Le téléprompteur écoute votre micro : il fait défiler le texte tant que vous parlez et **se met en pause dès que vous faites une pause** (pour réfléchir, respirer, refaire une prise). L'allure pendant que vous parlez se règle avec le curseur **Vitesse**. C'est le mode le plus naturel : le texte suit votre rythme de parole.
-- **Manuel** — Défilement à vitesse constante que vous réglez avec le curseur **Vitesse**.
+- **🎙 Voice (automatic)** — the teleprompter listens to your mic: it scrolls while you talk and **pauses as soon as you pause** (to think, breathe, redo a take). The pace while you speak is set with the **Vitesse** (Speed) slider. The most natural mode — the text follows your speaking rhythm.
+- **Manual** — constant scroll speed you set with the **Vitesse** slider.
 
 ---
 
-## ⌨️ Raccourcis clavier
+## ⌨️ Keyboard shortcuts
 
-| Touche | Action |
+| Key | Action |
 |---|---|
-| `Espace` | Lecture / Pause |
-| `↑` / `↓` | Reculer / avancer le texte |
-| Molette souris | Repositionner le texte |
-| `+` / `−` | Agrandir / réduire le texte |
-| `M` | Mode miroir |
-| `E` | Modifier le script |
-| `Échap` | Stopper le défilement |
-| `⌘⇧L` | **Verrouiller / déverrouiller** la fenêtre (mode « clic-à-travers » : les clics passent vers l'app derrière) |
-
-> 💡 **Astuce « clic-à-travers » :** le bouton 🔓 (ou `⌘⇧L`) rend la fenêtre transparente aux clics — vous pouvez cliquer dans l'app derrière (montage, navigateur…) tout en gardant le script visible par-dessus. Réappuyez sur `⌘⇧L` pour reprendre la main.
+| `Space` | Play / Pause |
+| `↑` / `↓` | Move the text back / forward |
+| Mouse wheel | Reposition the text |
+| `+` / `−` | Increase / decrease text size |
+| `M` | Mirror mode |
+| `E` | Edit the script |
+| `Esc` | Stop scrolling |
+| `⌘⇧L` | **Lock / unlock** the window (click-through mode) |
 
 ---
 
-## 🔧 Réglages mémorisés
+## 🔧 Saved settings
 
-Vos préférences (script, taille, police, opacité, vitesse, mode) sont **enregistrées automatiquement** et rechargées au prochain lancement.
-
----
-
-## ❓ Dépannage
-
-- **« Le défilement vocal ne réagit pas »** → vérifiez l'autorisation micro (Réglages Système → Confidentialité → Microphone), et que le bon micro est sélectionné dans les Réglages Son de macOS. L'indicateur de niveau (barre verte/rouge) dans la barre du haut doit bouger quand vous parlez.
-- **« La fenêtre ne se met pas au-dessus d'une app en plein écran »** → macOS limite parfois cela ; sortez l'app cible du vrai plein écran (utilisez une fenêtre maximisée plutôt que le plein écran natif).
-- **« Je veux une vraie app (icône) sans Terminal »** → c'est possible de la compiler en `.app` autonome ; demandez-le.
+Your preferences (script, size, font, opacity, speed, mode, display settings) are **saved automatically** and restored on the next launch.
 
 ---
 
-*Développé avec Electron. Léger, local, aucune donnée envoyée sur Internet (hormis le chargement initial des polices Google Fonts).*
+## 🧩 Tech notes
+
+- Built with **[Electron](https://www.electronjs.org/)**. Lightweight and fully local.
+- Electron is intentionally **pinned to v33**: v42 crashes on launch on recent macOS (native CommonJS-lexer assertion).
+- Scrolling uses a CSS `transform` (not `scrollTop`) so it never stalls when the mic meter repaints the bar.
+- Color pickers use an in-app palette (the native macOS picker won't open behind an always-on-top window).
+
+---
+
+## 📄 License
+
+[MIT](LICENSE) © Enrick Pellegrin
