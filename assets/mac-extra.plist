@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
   <key>NSMicrophoneUsageDescription</key>
-  <string>« Ça téléprompt » écoute le micro pour faire défiler votre texte pendant que vous parlez.</string>
+  <string>Voice Teleprompter écoute le micro pour faire défiler votre texte pendant que vous parlez.</string>
   <key>NSHighResolutionCapable</key>
   <true/>
 </dict>

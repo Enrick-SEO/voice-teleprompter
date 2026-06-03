@@ -1,4 +1,4 @@
-# Ça téléprompt — teleprompter app for macOS (Electron)
+# Voice Teleprompter — teleprompter app for macOS (Electron)
 
 A macOS teleprompter: floating transparent always-on-top window, hands-free voice
 scrolling (mic detection), rich-text formatting, current-line highlight, reading time,
@@ -6,7 +6,7 @@ etc. See `README.md` for the full user guide.
 
 ## 🤖 If you are the AI assistant asked to install this project
 
-Goal: install, then build the "Ça téléprompt" app and place it on the Desktop, ready to
+Goal: install, then build the "Voice Teleprompter" app and place it on the Desktop, ready to
 double-click. This app is NOT on the App Store — you build it locally (this is normal and
 avoids macOS Gatekeeper warnings).
 
@@ -15,13 +15,13 @@ avoids macOS Gatekeeper warnings).
 1. Check Node.js: `node --version` (need ≥ 18).
    - If missing: suggest `brew install node` (or download from https://nodejs.org).
 2. Build + install on the Desktop, either:
-   - **Easiest**: ask the user to double-click `Reconstruire l'app.command`
+   - **Easiest**: ask the user to double-click `Build app.command`
      (first time: right-click → Open).
    - **Or via the command line**, from this folder:
      ```bash
      npm install
      npm run package
-     APP="Ça téléprompt.app"
+     APP="Voice Teleprompter.app"
      BUILT="$(ls -d dist/*/*.app 2>/dev/null | head -1)"   # *.app glob: avoids the "Ç" Unicode normalization issue
      codesign --force --deep --sign - "$BUILT"
      ditto "$BUILT" "$HOME/Desktop/$APP"
@@ -52,5 +52,5 @@ scrolling).
 - `index.html` / `styles.css` / `renderer.js` — teleprompter UI and logic
 - `pill.html` / `pill.js` — the floating "Unlock" pill window (shown when locked)
 - `assets/` — icon (`icon.icns`/`icon.png`) and `mac-extra.plist` (mic permission)
-- `Reconstruire l'app.command` — build + sign + copy to the Desktop (double-click)
-- `Lancer le téléprompteur.command` — run in development mode (double-click)
+- `Build app.command` — build + sign + copy to the Desktop (double-click)
+- `Run dev mode.command` — run in development mode (double-click)

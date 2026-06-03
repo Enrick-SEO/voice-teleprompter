@@ -1,13 +1,13 @@
 {
   "name": "teleprompteur",
   "version": "1.0.0",
-  "description": "Téléprompteur transparent pour Mac avec défilement vocal (détection de voix)",
+  "description": "Voice Teleprompter — transparent, always-on-top teleprompter for macOS with hands-free voice scrolling.",
   "author": "Enrick Pellegrin",
   "license": "MIT",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "package": "electron-packager . \"Ça téléprompt\" --platform=darwin --icon=assets/icon.icns --app-bundle-id=com.enrick.caprompt --app-version=1.0.0 --extend-info=assets/mac-extra.plist --out=dist --overwrite --ignore=\"^/dist\" --ignore=\"^/\\.claude\" --ignore=\"^/assets/icon\\.iconset\" --ignore=\"\\.command$\""
+    "package": "electron-packager . \"Voice Teleprompter\" --platform=darwin --icon=assets/icon.icns --app-bundle-id=com.enrick.voiceteleprompter --app-version=1.0.0 --extend-info=assets/mac-extra.plist --out=dist --overwrite --ignore=\"^/dist\" --ignore=\"^/\\.claude\" --ignore=\"^/assets/icon\\.iconset\" --ignore=\"\\.command$\""
   },
   "devDependencies": {
     "@electron/packager": "^20.0.0",

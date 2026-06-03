@@ -25,7 +25,7 @@ function createWindow() {
     alwaysOnTop: true, // toujours au-dessus des autres apps
     resizable: true,
     backgroundColor: '#00000000',
-    title: 'Ça téléprompt',
+    title: 'Voice Teleprompter',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,

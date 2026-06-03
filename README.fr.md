@@ -1,6 +1,6 @@
 [English](README.md) · **Français**
 
-# 🎬 Ça téléprompt
+# 🎬 Voice Teleprompter
 
 Une fenêtre flottante, transparente et toujours au-dessus des autres apps, pour lire un script vidéo face caméra — avec **défilement automatique au micro** (le texte avance quand vous parlez, se met en pause quand vous faites une pause).
 
@@ -10,17 +10,17 @@ Une fenêtre flottante, transparente et toujours au-dessus des autres apps, pour
 
 ## 🚀 Lancer l'application
 
-**Le plus simple :** double-cliquez sur l'icône **« Ça téléprompt »** sur votre **Bureau**.
+**Le plus simple :** double-cliquez sur l'icône **« Voice Teleprompter »** sur votre **Bureau**.
 > La toute première fois : **clic droit → Ouvrir** (pour passer l'avertissement macOS), puis macOS demandera l'accès au **microphone** → **acceptez** (nécessaire pour le défilement vocal). Ensuite, un simple double-clic suffit.
 
 **Autres façons de lancer** (depuis ce dossier) :
-- Double-cliquez sur `Lancer le téléprompteur.command` (mode développement)
+- Double-cliquez sur `Run dev mode.command` (mode développement)
 - Ou en terminal : `npm install` (1re fois) puis `npm start`
 
-> Si vous refusez le micro par erreur : *Réglages Système → Confidentialité et sécurité → Microphone* → activez « Ça téléprompt ».
+> Si vous refusez le micro par erreur : *Réglages Système → Confidentialité et sécurité → Microphone* → activez « Voice Teleprompter ».
 
 ### 🔁 Mettre à jour l'app du Bureau
-Si l'outil est modifié, double-cliquez sur **`Reconstruire l'app.command`** : il repackage « Ça téléprompt » et le replace à jour sur votre Bureau.
+Si l'outil est modifié, double-cliquez sur **`Build app.command`** : il repackage « Voice Teleprompter » et le replace à jour sur votre Bureau.
 
 ---
 
@@ -116,10 +116,10 @@ Prérequis : **macOS** + **[Node.js](https://nodejs.org)** (≥ 18).
 ```bash
 npm install        # installe les dépendances (Electron est épinglé à la v33)
 npm start          # lance en mode développement
-npm run package    # construit l'app « Ça téléprompt.app » dans dist/
+npm run package    # construit l'app « Voice Teleprompter.app » dans dist/
 ```
 
-Le plus simple reste de double-cliquer sur **`Reconstruire l'app.command`** (build + signature locale + copie sur le Bureau).
+Le plus simple reste de double-cliquer sur **`Build app.command`** (build + signature locale + copie sur le Bureau).
 
 > ⚠️ Electron est volontairement **épinglé à la v33** : la v42 plante au démarrage sur macOS récent.
 

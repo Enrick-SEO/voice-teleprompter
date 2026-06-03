@@ -1,10 +1,10 @@
 #!/bin/bash
-# Reconstruit l'application « Ça téléprompt » et la (re)place sur le Bureau.
+# Reconstruit l'application « Voice Teleprompter » et la (re)place sur le Bureau.
 # À lancer après toute modification de l'outil. (1re fois : clic droit > Ouvrir)
 set -e
 cd "$(dirname "$0")"
 
-APP="Ça téléprompt.app"
+APP="Voice Teleprompter.app"
 DEST="$HOME/Desktop/$APP"
 
 echo "1/4  Installation des dépendances (si besoin)…"
@@ -26,5 +26,5 @@ ditto "$BUILT" "$DEST"
 xattr -dr com.apple.quarantine "$DEST" 2>/dev/null || true
 
 echo ""
-echo "✅ Terminé ! « Ça téléprompt » est à jour sur votre Bureau."
+echo "✅ Terminé ! « Voice Teleprompter » est à jour sur votre Bureau."
 echo "   (Vous pouvez fermer cette fenêtre.)"

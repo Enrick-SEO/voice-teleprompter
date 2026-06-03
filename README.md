@@ -1,6 +1,6 @@
 **English** · [Français](README.fr.md)
 
-# 🎬 Ça téléprompt — voice teleprompter for macOS
+# 🎬 Voice Teleprompter for macOS
 
 A floating, transparent, always-on-top teleprompter to read a video script straight to camera — with **hands-free voice scrolling** (the text advances while you speak and pauses when you pause).
 
@@ -29,10 +29,10 @@ The app is **not on the App Store** — you build it locally (this is normal and
 ```bash
 npm install        # install dependencies (Electron is pinned to v33 — see note below)
 npm start          # run in development mode
-npm run package    # build "Ça téléprompt.app" into dist/
+npm run package    # build "Voice Teleprompter.app" into dist/
 ```
 
-The easiest way to get a double-clickable app: run **`Reconstruire l'app.command`** ("Rebuild the app" — double-click it). It builds, ad-hoc signs, and copies **`Ça téléprompt.app`** to your Desktop.
+The easiest way to get a double-clickable app: double-click **`Build app.command`**. It builds, ad-hoc signs, and copies **`Voice Teleprompter.app`** to your Desktop.
 
 On first launch, macOS asks for **microphone** access → **allow it** (required for voice scrolling). If you used a packaged `.app` from someone else: right-click → **Open** the first time.
 
