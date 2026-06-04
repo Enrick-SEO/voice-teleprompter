@@ -6,6 +6,16 @@ A floating, transparent, always-on-top teleprompter to read a video script strai
 
 > ℹ️ The app's interface is in **French** (it was built for a French-speaking creator). This README is available in [English](README.md) and [Français](README.fr.md).
 
+<p align="center">
+  <img src="assets/screenshots/hero.jpg" alt="Voice Teleprompter — transparent floating window over the desktop" width="820"><br>
+  <sub><em>Floating, transparent and always-on-top — your script stays readable over whatever's on screen.</em></sub>
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/demo.gif" alt="Scrolling demo" width="720"><br>
+  <sub><em>Hands-free: the text scrolls while you speak (or at a constant speed in manual mode).</em></sub>
+</p>
+
 ---
 
 ## ✨ Highlights
@@ -17,6 +27,18 @@ A floating, transparent, always-on-top teleprompter to read a video script strai
 - **Reading aids** — current-line highlight, estimated reading time + progress bar, and "stage directions" you don't read aloud.
 - **Click-through lock** — hides the toolbar and lets clicks pass through to the app behind, with a draggable **"Unlock" pill** to come back.
 - **100% local** — no data leaves your machine (apart from the initial Google Fonts download).
+
+---
+
+## 📸 Screenshots
+
+<table>
+  <tr>
+    <td width="33%" align="center"><img src="assets/screenshots/voice.jpg" alt="Voice mode"><br><sub><b>🎙 Voice mode</b><br>scrolls while you speak, pauses on silence</sub></td>
+    <td width="33%" align="center"><img src="assets/screenshots/editor.jpg" alt="Rich-text editor"><br><sub><b>✎ Rich-text editor</b><br>bold, colors, highlighter, stage directions</sub></td>
+    <td width="33%" align="center"><img src="assets/screenshots/locked.jpg" alt="Locked click-through mode"><br><sub><b>🔒 Locked (click-through)</b><br>with the draggable “Unlock” pill</sub></td>
+  </tr>
+</table>
 
 ---
 

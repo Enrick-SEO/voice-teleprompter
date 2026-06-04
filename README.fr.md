@@ -6,6 +6,28 @@ Une fenêtre flottante, transparente et toujours au-dessus des autres apps, pour
 
 > ℹ️ L'interface de l'application est en **français**.
 
+<p align="center">
+  <img src="assets/screenshots/hero.jpg" alt="Voice Teleprompter — fenêtre flottante transparente sur le bureau" width="820"><br>
+  <sub><em>Flottante, transparente et toujours au-dessus — votre script reste lisible par-dessus tout ce que vous faites.</em></sub>
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/demo.gif" alt="Démo du défilement" width="720"><br>
+  <sub><em>Mains libres : le texte défile pendant que vous parlez (ou à vitesse constante en mode manuel).</em></sub>
+</p>
+
+---
+
+## 📸 Aperçu
+
+<table>
+  <tr>
+    <td width="33%" align="center"><img src="assets/screenshots/voice.jpg" alt="Mode voix"><br><sub><b>🎙 Mode Voix</b><br>défile quand vous parlez, pause sur les silences</sub></td>
+    <td width="33%" align="center"><img src="assets/screenshots/editor.jpg" alt="Éditeur de texte"><br><sub><b>✎ Éditeur enrichi</b><br>gras, couleurs, surligneur, didascalies</sub></td>
+    <td width="33%" align="center"><img src="assets/screenshots/locked.jpg" alt="Mode verrouillé"><br><sub><b>🔒 Mode verrouillé (clic-à-travers)</b><br>avec la pastille « Débloquer » déplaçable</sub></td>
+  </tr>
+</table>
+
 ---
 
 ## 🚀 Lancer l'application
