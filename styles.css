@@ -272,6 +272,14 @@ select option {
   color: #06270f;
   font-weight: 600;
 }
+/* Largeur fixe pour l'état du micro : « silence » / « vous parlez » ne doit
+   pas faire bouger les autres éléments de la barre quand le texte change. */
+#voiceState {
+  display: inline-block;
+  box-sizing: border-box;
+  min-width: 96px;
+  text-align: center;
+}
 
 /* ===================== Zone de lecture ===================== */
 #viewport {
