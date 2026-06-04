@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('teleAPI', {
   requestLock: (locked) => ipcRenderer.send('request-lock', locked),
   onLockedChanged: (cb) => ipcRenderer.on('locked-changed', (e, locked) => cb(locked)),
   setAlwaysOnTop: (value) => ipcRenderer.send('set-always-on-top', value),
+  setContentProtection: (on) => ipcRenderer.send('set-content-protection', on),
   quit: () => ipcRenderer.send('quit-app'),
   // pastille « Débloquer »
   pillUnlock: () => ipcRenderer.send('pill-unlock'),

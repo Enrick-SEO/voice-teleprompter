@@ -29,6 +29,7 @@ const els = {
   topBtn: $('#topBtn'),
   settingsBtn: $('#settingsBtn'),
   settingsPanel: $('#settingsPanel'),
+  captureToggle: $('#captureToggle'),
   focusToggle: $('#focusToggle'),
   readingPos: $('#readingPos'),
   textWidth: $('#textWidth'),
@@ -90,6 +91,7 @@ const state = {
   textWidth: 0.88, // largeur de la colonne de texte (fraction)
   lineHeight: 1.5, // interligne
   showInfo: true, // afficher temps + barre de progression
+  hideFromCapture: true, // invisible à l'enregistrement d'écran (par défaut OUI)
 };
 
 const WPM = 150; // mots/minute de référence pour estimer le temps de lecture
@@ -420,6 +422,8 @@ function applyState() {
   els.focusToggle.textContent = state.focusLine ? 'Activée' : 'Désactivée';
   els.infoToggle.classList.toggle('toggled', state.showInfo);
   els.infoToggle.textContent = state.showInfo ? 'Affichées' : 'Masquées';
+  els.captureToggle.classList.toggle('toggled', state.hideFromCapture);
+  els.captureToggle.textContent = state.hideFromCapture ? 'Activé' : 'Désactivé';
   els.timeReadout.classList.toggle('hidden', !state.showInfo);
   els.progressWrap.classList.toggle('hidden', !state.showInfo);
   if (!state.focusLine && currentLineIdx >= 0 && lineOffsets[currentLineIdx]) {
@@ -619,6 +623,13 @@ els.lineHeight.addEventListener('input', () => {
 
 els.infoToggle.addEventListener('click', () => {
   state.showInfo = !state.showInfo;
+  applyState();
+  saveSettings();
+});
+
+els.captureToggle.addEventListener('click', () => {
+  state.hideFromCapture = !state.hideFromCapture;
+  window.teleAPI.setContentProtection(state.hideFromCapture);
   applyState();
   saveSettings();
 });
@@ -843,6 +854,8 @@ window.addEventListener('resize', relayout);
 loadSettings();
 renderScript(getScript());
 applyState();
+// synchronise l'invisibilité à l'enregistrement avec la préférence enregistrée
+window.teleAPI.setContentProtection(state.hideFromCapture);
 // recadre une fois les polices chargées (la hauteur du texte peut changer)
 if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(relayout);

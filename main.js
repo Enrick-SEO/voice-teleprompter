@@ -12,6 +12,7 @@ const path = require('path');
 let win; // fenêtre principale (téléprompteur)
 let pill = null; // mini-fenêtre « Débloquer » (visible quand verrouillé)
 let isLocked = false;
+let contentProtected = true; // invisible à la capture d'écran (par défaut OUI)
 
 function createWindow() {
   win = new BrowserWindow({
@@ -39,6 +40,10 @@ function createWindow() {
   // Flotte même au-dessus des apps en plein écran / sur tous les bureaux
   win.setAlwaysOnTop(true, 'screen-saver');
   win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+
+  // Invisible pour les outils de capture/enregistrement (Loom, Zoom, QuickTime…),
+  // tout en restant visible à l'écran pour l'utilisateur.
+  win.setContentProtection(contentProtected);
 
   win.loadFile('index.html');
 
@@ -82,6 +87,7 @@ function createPill() {
   });
   pill.setAlwaysOnTop(true, 'screen-saver');
   pill.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  pill.setContentProtection(contentProtected); // invisible à la capture aussi
   pill.loadFile('pill.html');
 }
 
@@ -150,6 +156,13 @@ ipcMain.on('pill-move', (e, d) => {
 
 ipcMain.on('set-always-on-top', (e, value) => {
   if (win) win.setAlwaysOnTop(value, 'screen-saver');
+});
+
+// Invisibilité à l'enregistrement d'écran (Loom, Zoom, QuickTime…)
+ipcMain.on('set-content-protection', (e, on) => {
+  contentProtected = !!on;
+  if (win && !win.isDestroyed()) win.setContentProtection(contentProtected);
+  if (pill && !pill.isDestroyed()) pill.setContentProtection(contentProtected);
 });
 
 ipcMain.on('quit-app', () => app.quit());

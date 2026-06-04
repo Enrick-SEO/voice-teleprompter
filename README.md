@@ -21,6 +21,7 @@ A floating, transparent, always-on-top teleprompter to read a video script strai
 ## ✨ Highlights
 
 - **Transparent, always-on-top window** — see (and click) whatever is behind it.
+- **Invisible to screen recording** — hidden from Loom, Zoom, OBS, QuickTime… so your script never shows up in your videos or screen shares (toggle in ⚙).
 - **Voice scrolling** — listens to your mic; scrolls while you talk, pauses on silence.
 - **Manual mode** — constant, adjustable scroll speed.
 - **Rich-text scripts** — bold, italic, underline, text color, highlighter.
@@ -76,6 +77,7 @@ On first launch, macOS asks for **microphone** access → **allow it** (required
 | **Speed** | **Vitesse** slider (constant in Manual; pace-while-speaking in Voice) |
 | **Mirror mode** | **⇄** button (for beam-splitter / reflective teleprompters) |
 | **Click-through lock** | **🔓** button or `⌘⇧L`: **hides the whole toolbar**, makes the window click-through |
+| **Invisible to screen recording** | **⚙** menu → *« 🎥 Invisible à l'enregistrement d'écran »*: the window is hidden from Loom/Zoom/OBS/QuickTime (**on by default**) — visible to you, never in the recording |
 | **Current-line highlight** | **⚙** menu: the line being read stays sharp, the rest is dimmed |
 | **Reading time + progress** | Shown at the bottom (⏱ remaining / total) — based on word count |
 | **Stage directions (not read)** | Put notes in `[brackets]`: shown in orange, excluded from timing |

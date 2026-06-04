@@ -60,6 +60,7 @@ Si l'outil est modifié, double-cliquez sur **`Build app.command`** : il repacka
 | **Vitesse** | Curseur **Vitesse** (allure constante en Manuel ; allure pendant que vous parlez en Voix) |
 | **Mode miroir** | Bouton **⇄** (pour les téléprompteurs à vitre/réflexion) |
 | **Mode verrouillé (clic-à-travers)** | Bouton **🔓** ou `⌘⇧L` : **masque toute la barre**, rend la fenêtre transparente aux clics |
+| **Invisible à l'enregistrement d'écran** | Menu **⚙** → *« 🎥 Invisible à l'enregistrement d'écran »* : la fenêtre est masquée pour Loom/Zoom/OBS/QuickTime (**activé par défaut**) — visible pour vous, jamais dans l'enregistrement |
 | **Surbrillance ligne en cours** | Menu **⚙** : la ligne lue reste nette, le reste est atténué |
 | **Temps de lecture + progression** | Affichés en bas (⏱ restant / total) — basés sur le nombre de mots |
 | **Didascalies (notes non lues)** | Mettez vos notes entre `[crochets]` : affichées en orange, exclues du minutage |
