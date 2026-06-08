@@ -451,10 +451,18 @@ function applyState() {
   applyScroll();
 }
 
+// La fenêtre reste « toujours au-dessus » UNIQUEMENT pendant la lecture
+// (ou quand elle est verrouillée). Sinon, fenêtre normale : un clic sur une
+// autre app la fait passer derrière.
+function updateAlwaysOnTop() {
+  window.teleAPI.setAlwaysOnTop(state.playing || state.locked);
+}
+
 function setPlaying(v) {
   state.playing = v;
   if (v) lastTs = null;
   if (v && state.mode === 'voice') startMic();
+  updateAlwaysOnTop();
   applyState();
 }
 
@@ -795,6 +803,7 @@ function applyLockUI(v) {
   document.body.classList.toggle('locked', v);
   els.lockBtn.textContent = v ? '🔒' : '🔓';
   els.lockBtn.classList.toggle('toggled', v);
+  updateAlwaysOnTop(); // verrouillé = on reste au-dessus
   lastIgnore = null; // au déverrouillage, le clic-à-travers hybride se ré-évalue
   // la barre disparaît/réapparaît : la zone de lecture change de hauteur,
   // on recadre les marges et les lignes une fois le layout recalculé
@@ -892,6 +901,8 @@ renderScript(getScript());
 applyState();
 // synchronise l'invisibilité à l'enregistrement avec la préférence enregistrée
 window.teleAPI.setContentProtection(state.hideFromCapture);
+// au lancement on n'est pas en lecture → la fenêtre n'est pas forcée au-dessus
+updateAlwaysOnTop();
 // recadre une fois les polices chargées (la hauteur du texte peut changer)
 if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(relayout);

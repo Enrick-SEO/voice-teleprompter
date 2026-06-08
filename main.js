@@ -155,7 +155,10 @@ ipcMain.on('pill-move', (e, d) => {
 });
 
 ipcMain.on('set-always-on-top', (e, value) => {
-  if (win) win.setAlwaysOnTop(value, 'screen-saver');
+  if (win && !win.isDestroyed()) {
+    if (value) win.setAlwaysOnTop(true, 'screen-saver');
+    else win.setAlwaysOnTop(false);
+  }
 });
 
 // Clic-à-travers « hybride » piloté par le renderer (selon la position du curseur).
