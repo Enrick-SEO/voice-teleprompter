@@ -78,6 +78,7 @@ On first launch, macOS asks for **microphone** access → **allow it** (required
 | **Mirror mode** | **⇄** button (for beam-splitter / reflective teleprompters) |
 | **Click-through lock** | **🔓** button or `⌘⇧L`: **hides the whole toolbar**, makes the window click-through |
 | **Invisible to screen recording** | **⚙** menu → *« 🎥 Invisible à l'enregistrement d'écran »*: the window is hidden from Loom/Zoom/OBS/QuickTime (**on by default**) — visible to you, never in the recording |
+| **Smart click-through** | **⚙** menu → *« 🖱️ Laisser passer les clics »*: click *through* the script to the app behind, while the toolbar stays clickable — read and work in your browser without locking |
 | **Current-line highlight** | **⚙** menu: the line being read stays sharp, the rest is dimmed |
 | **Reading time + progress** | Shown at the bottom (⏱ remaining / total) — based on word count |
 | **Stage directions (not read)** | Put notes in `[brackets]`: shown in orange, excluded from timing |

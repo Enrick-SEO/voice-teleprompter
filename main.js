@@ -158,6 +158,14 @@ ipcMain.on('set-always-on-top', (e, value) => {
   if (win) win.setAlwaysOnTop(value, 'screen-saver');
 });
 
+// Clic-à-travers « hybride » piloté par le renderer (selon la position du curseur).
+// Ignoré quand la fenêtre est verrouillée (le verrou force déjà l'ignore total).
+ipcMain.on('set-ignore-mouse', (e, opts) => {
+  if (win && !win.isDestroyed() && !isLocked) {
+    win.setIgnoreMouseEvents(!!(opts && opts.ignore), { forward: !!(opts && opts.forward) });
+  }
+});
+
 // Invisibilité à l'enregistrement d'écran (Loom, Zoom, QuickTime…)
 ipcMain.on('set-content-protection', (e, on) => {
   contentProtected = !!on;

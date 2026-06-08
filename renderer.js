@@ -30,6 +30,7 @@ const els = {
   settingsBtn: $('#settingsBtn'),
   settingsPanel: $('#settingsPanel'),
   captureToggle: $('#captureToggle'),
+  passClicksToggle: $('#passClicksToggle'),
   focusToggle: $('#focusToggle'),
   readingPos: $('#readingPos'),
   textWidth: $('#textWidth'),
@@ -92,6 +93,7 @@ const state = {
   lineHeight: 1.5, // interligne
   showInfo: true, // afficher temps + barre de progression
   hideFromCapture: true, // invisible à l'enregistrement d'écran (par défaut OUI)
+  passClicks: false, // clic-à-travers hybride (clics passent sauf sur la barre)
 };
 
 const WPM = 150; // mots/minute de référence pour estimer le temps de lecture
@@ -424,6 +426,8 @@ function applyState() {
   els.infoToggle.textContent = state.showInfo ? 'Affichées' : 'Masquées';
   els.captureToggle.classList.toggle('toggled', state.hideFromCapture);
   els.captureToggle.textContent = state.hideFromCapture ? 'Activé' : 'Désactivé';
+  els.passClicksToggle.classList.toggle('toggled', state.passClicks);
+  els.passClicksToggle.textContent = state.passClicks ? 'Activé' : 'Désactivé';
   els.timeReadout.classList.toggle('hidden', !state.showInfo);
   els.progressWrap.classList.toggle('hidden', !state.showInfo);
   if (!state.focusLine && currentLineIdx >= 0 && lineOffsets[currentLineIdx]) {
@@ -791,12 +795,44 @@ function applyLockUI(v) {
   document.body.classList.toggle('locked', v);
   els.lockBtn.textContent = v ? '🔒' : '🔓';
   els.lockBtn.classList.toggle('toggled', v);
+  lastIgnore = null; // au déverrouillage, le clic-à-travers hybride se ré-évalue
   // la barre disparaît/réapparaît : la zone de lecture change de hauteur,
   // on recadre les marges et les lignes une fois le layout recalculé
   requestAnimationFrame(relayout);
 }
 els.lockBtn.addEventListener('click', () => window.teleAPI.requestLock(true));
 window.teleAPI.onLockedChanged((v) => applyLockUI(v));
+
+// ---------------- Clic-à-travers « hybride » ----------------
+// Quand activé : les clics passent à travers la fenêtre PARTOUT, sauf sur la
+// barre / l'éditeur / les menus. On suit le curseur (les mousemove sont transmis
+// même en mode clic-à-travers grâce à { forward:true }) et on bascule l'« ignore
+// souris » en conséquence. Le verrouillage reste prioritaire (géré côté main).
+const INTERACTIVE_SEL = '#bar, #editor, #settingsPanel, #palette, #lockHint';
+let lastIgnore = null; // évite d'envoyer l'IPC à chaque pixel
+
+function updatePassthrough(e) {
+  if (!state.passClicks || state.locked) return;
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  const overInteractive = !!(el && el.closest(INTERACTIVE_SEL));
+  const ignore = !overInteractive;
+  if (ignore !== lastIgnore) {
+    lastIgnore = ignore;
+    window.teleAPI.setIgnoreMouse({ ignore, forward: true });
+  }
+}
+window.addEventListener('mousemove', updatePassthrough);
+
+els.passClicksToggle.addEventListener('click', () => {
+  state.passClicks = !state.passClicks;
+  lastIgnore = null;
+  if (!state.passClicks) {
+    // redevient une fenêtre normale (entièrement cliquable)
+    window.teleAPI.setIgnoreMouse({ ignore: false, forward: false });
+  }
+  applyState();
+  saveSettings();
+});
 
 // ---------------- Molette : repositionner le texte ----------------
 els.viewport.addEventListener(

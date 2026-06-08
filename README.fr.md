@@ -61,6 +61,7 @@ Si l'outil est modifié, double-cliquez sur **`Build app.command`** : il repacka
 | **Mode miroir** | Bouton **⇄** (pour les téléprompteurs à vitre/réflexion) |
 | **Mode verrouillé (clic-à-travers)** | Bouton **🔓** ou `⌘⇧L` : **masque toute la barre**, rend la fenêtre transparente aux clics |
 | **Invisible à l'enregistrement d'écran** | Menu **⚙** → *« 🎥 Invisible à l'enregistrement d'écran »* : la fenêtre est masquée pour Loom/Zoom/OBS/QuickTime (**activé par défaut**) — visible pour vous, jamais dans l'enregistrement |
+| **Clics traversants (intelligent)** | Menu **⚙** → *« 🖱️ Laisser passer les clics »* : cliquez *à travers* le script vers l'app derrière, la barre reste cliquable — lire et travailler dans votre navigateur sans verrouiller |
 | **Surbrillance ligne en cours** | Menu **⚙** : la ligne lue reste nette, le reste est atténué |
 | **Temps de lecture + progression** | Affichés en bas (⏱ restant / total) — basés sur le nombre de mots |
 | **Didascalies (notes non lues)** | Mettez vos notes entre `[crochets]` : affichées en orange, exclues du minutage |
