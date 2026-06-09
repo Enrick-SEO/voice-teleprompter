@@ -463,6 +463,7 @@ function setPlaying(v) {
   if (v) lastTs = null;
   if (v && state.mode === 'voice') startMic();
   updateAlwaysOnTop();
+  refreshClickThrough(); // clic-à-travers actif uniquement en lecture
   applyState();
 }
 
@@ -804,7 +805,7 @@ function applyLockUI(v) {
   els.lockBtn.textContent = v ? '🔒' : '🔓';
   els.lockBtn.classList.toggle('toggled', v);
   updateAlwaysOnTop(); // verrouillé = on reste au-dessus
-  lastIgnore = null; // au déverrouillage, le clic-à-travers hybride se ré-évalue
+  refreshClickThrough(); // ré-évalue le clic-à-travers (verrou / lecture)
   // la barre disparaît/réapparaît : la zone de lecture change de hauteur,
   // on recadre les marges et les lignes une fois le layout recalculé
   requestAnimationFrame(relayout);
@@ -820,8 +821,14 @@ window.teleAPI.onLockedChanged((v) => applyLockUI(v));
 const INTERACTIVE_SEL = '#bar, #editor, #settingsPanel, #palette, #lockHint';
 let lastIgnore = null; // évite d'envoyer l'IPC à chaque pixel
 
+// Le clic-à-travers hybride n'est actif que si : option cochée ET en LECTURE
+// (et non verrouillé — le verrou est géré séparément par le main).
+function hybridActive() {
+  return state.passClicks && state.playing && !state.locked;
+}
+
 function updatePassthrough(e) {
-  if (!state.passClicks || state.locked) return;
+  if (!hybridActive()) return;
   const el = document.elementFromPoint(e.clientX, e.clientY);
   const overInteractive = !!(el && el.closest(INTERACTIVE_SEL));
   const ignore = !overInteractive;
@@ -832,13 +839,19 @@ function updatePassthrough(e) {
 }
 window.addEventListener('mousemove', updatePassthrough);
 
-els.passClicksToggle.addEventListener('click', () => {
-  state.passClicks = !state.passClicks;
+// (Re)met l'état souris correct quand lecture / verrou / option changent.
+// Hors lecture (ou option décochée) et non verrouillé : fenêtre 100% cliquable.
+function refreshClickThrough() {
   lastIgnore = null;
-  if (!state.passClicks) {
-    // redevient une fenêtre normale (entièrement cliquable)
+  if (!hybridActive() && !state.locked) {
     window.teleAPI.setIgnoreMouse({ ignore: false, forward: false });
   }
+  // si hybridActive : le mousemove pilote ; si verrouillé : géré par le main
+}
+
+els.passClicksToggle.addEventListener('click', () => {
+  state.passClicks = !state.passClicks;
+  refreshClickThrough();
   applyState();
   saveSettings();
 });
@@ -901,8 +914,9 @@ renderScript(getScript());
 applyState();
 // synchronise l'invisibilité à l'enregistrement avec la préférence enregistrée
 window.teleAPI.setContentProtection(state.hideFromCapture);
-// au lancement on n'est pas en lecture → la fenêtre n'est pas forcée au-dessus
+// au lancement on n'est pas en lecture → ni au-dessus, ni clic-à-travers
 updateAlwaysOnTop();
+refreshClickThrough();
 // recadre une fois les polices chargées (la hauteur du texte peut changer)
 if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(relayout);
