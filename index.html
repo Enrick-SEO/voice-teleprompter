@@ -37,6 +37,7 @@
 
         <div class="group" id="voiceGroup" style="display: none">
           <label>Micro</label>
+          <select id="micSelect" title="Choisir le micro"></select>
           <div class="meter"><div id="meterFill"></div></div>
           <span id="voiceState" class="pill">silence</span>
         </div>
@@ -157,6 +158,11 @@
             <button data-pos="left" class="seg-btn">Gauche</button>
             <button data-pos="right" class="seg-btn">Droite</button>
           </div>
+        </div>
+        <div class="panel-row">
+          <label>🎙️ Sensibilité du micro (mode voix)</label>
+          <input id="micSensitivity" type="range" min="50" max="300" step="5" value="100" />
+          <span class="hint">Augmentez si l'app ne détecte pas votre voix (micro faible), baissez si elle défile sur le bruit ambiant.</span>
         </div>
         <div class="panel-row">
           <label>Surbrillance de la ligne en cours</label>

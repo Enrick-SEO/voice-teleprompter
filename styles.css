@@ -229,6 +229,10 @@ select {
 select option {
   color: #000;
 }
+#micSelect {
+  max-width: 150px;
+  text-overflow: ellipsis;
+}
 
 /* Bouton-pastille de couleur (barre du haut) */
 .color-swatch {

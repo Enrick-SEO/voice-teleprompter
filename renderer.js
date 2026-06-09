@@ -14,6 +14,8 @@ const els = {
   speed: $('#speed'),
   speedGroup: $('#speedGroup'),
   voiceGroup: $('#voiceGroup'),
+  micSelect: $('#micSelect'),
+  micSensitivity: $('#micSensitivity'),
   meterFill: $('#meterFill'),
   voiceState: $('#voiceState'),
   fontMinus: $('#fontMinus'),
@@ -96,6 +98,8 @@ const state = {
   hideFromCapture: true, // invisible à l'enregistrement d'écran (par défaut OUI)
   passClicks: false, // clic-à-travers hybride (clics passent sauf sur la barre)
   barPosition: 'top', // position de la barre d'outils : top|bottom|left|right
+  micDeviceId: '', // micro choisi ('' = micro par défaut du système)
+  micSensitivity: 1, // sensibilité de la détection de voix (0.5–3)
 };
 
 const BAR_POSITIONS = ['top', 'bottom', 'left', 'right'];
@@ -336,12 +340,35 @@ let noiseFloor = 0.01; // niveau du bruit de fond, calibré en continu
 const MIN_FLOOR = 0.003; // plancher pour ne pas devenir hypersensible
 let speakingHold = 0; // ms restantes avant de considérer « silence »
 
-async function startMic() {
-  if (audioCtx) return true;
+let micStream = null;
+
+// Libère le micro (flux + contexte audio). La boucle monitorMic s'arrête
+// d'elle-même quand analyser devient null.
+function stopMic() {
+  if (micStream) {
+    micStream.getTracks().forEach((t) => t.stop());
+    micStream = null;
+  }
+  if (audioCtx) {
+    try {
+      audioCtx.close();
+    } catch (e) {}
+    audioCtx = null;
+  }
+  analyser = null;
+  els.meterFill.style.width = '0%';
+}
+
+// (Re)capte le micro. force=true relance la captation avec le device courant
+// (utile au passage en Voix, au changement de micro, ou au branchement).
+async function startMic(force) {
+  if (audioCtx && !force) return true;
+  stopMic();
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-    });
+    const audio = { echoCancellation: true, noiseSuppression: true, autoGainControl: true };
+    if (state.micDeviceId) audio.deviceId = { exact: state.micDeviceId };
+    const stream = await navigator.mediaDevices.getUserMedia({ audio });
+    micStream = stream;
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const src = audioCtx.createMediaStreamSource(stream);
     analyser = audioCtx.createAnalyser();
@@ -349,9 +376,17 @@ async function startMic() {
     analyser.smoothingTimeConstant = 0.6;
     micData = new Float32Array(analyser.fftSize);
     src.connect(analyser);
+    noiseFloor = 0.01; // recalibrage du bruit de fond pour le nouveau micro
     requestAnimationFrame(monitorMic);
+    populateMicList(); // les libellés ne sont dispo qu'après autorisation
     return true;
   } catch (e) {
+    // le micro choisi a disparu (débranché) -> on retombe sur le micro par défaut
+    if (state.micDeviceId) {
+      state.micDeviceId = '';
+      saveSettings();
+      return startMic(true);
+    }
     alert(
       "Impossible d'accéder au micro.\n\n" +
         'Ouvrez Réglages Système > Confidentialité et sécurité > Microphone, ' +
@@ -359,6 +394,21 @@ async function startMic() {
     );
     return false;
   }
+}
+
+// Remplit la liste déroulante des micros disponibles.
+async function populateMicList() {
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    els.micSelect.innerHTML = '';
+    els.micSelect.appendChild(new Option('Micro par défaut', ''));
+    devices.forEach((d) => {
+      if (d.kind !== 'audioinput') return;
+      if (!d.deviceId || d.deviceId === 'default' || d.deviceId === 'communications') return;
+      els.micSelect.appendChild(new Option(d.label || 'Micro', d.deviceId));
+    });
+    els.micSelect.value = state.micDeviceId || '';
+  } catch (e) {}
 }
 
 function monitorMic(ts) {
@@ -371,7 +421,8 @@ function monitorMic(ts) {
   const rms = Math.sqrt(sum / micData.length);
 
   // seuil de parole : nettement au-dessus du bruit de fond mesuré
-  const speechThresh = Math.max(MIN_FLOOR * 2, noiseFloor * 1.8 + 0.004);
+  const sens = state.micSensitivity || 1;
+  const speechThresh = Math.max(MIN_FLOOR, (noiseFloor * 1.8 + 0.004) / sens);
 
   if (rms > speechThresh) {
     voiceActive = true;
@@ -413,6 +464,7 @@ function applyState() {
 
   els.fontVal.textContent = state.fontSize;
   els.speed.value = state.speedManual;
+  els.micSensitivity.value = Math.round(state.micSensitivity * 100);
   els.opacity.value = Math.round(state.panelAlpha * 100);
   els.textColorSw.style.background = state.textColor;
   els.textOpacity.value = Math.round(state.textOpacity * 100);
@@ -478,7 +530,8 @@ function setPlaying(v) {
 
 function setMode(mode) {
   state.mode = mode;
-  if (mode === 'voice') startMic();
+  if (mode === 'voice') startMic(true); // re-capte le micro courant à chaque passage en Voix
+  else stopMic(); // libère le micro hors mode Voix
   saveSettings();
   applyState();
 }
@@ -493,6 +546,25 @@ els.modeGroup.querySelectorAll('.seg-btn').forEach((b) => {
 els.speed.addEventListener('input', () => {
   state.speedManual = parseInt(els.speed.value, 10);
   saveSettings();
+});
+
+// Choix du micro
+els.micSelect.addEventListener('change', () => {
+  state.micDeviceId = els.micSelect.value;
+  saveSettings();
+  if (state.mode === 'voice') startMic(true);
+});
+
+// Sensibilité de la détection de voix
+els.micSensitivity.addEventListener('input', () => {
+  state.micSensitivity = parseInt(els.micSensitivity.value, 10) / 100;
+  saveSettings();
+});
+
+// Branchement / débranchement d'un micro : on rafraîchit la liste et on re-capte
+navigator.mediaDevices.addEventListener('devicechange', async () => {
+  await populateMicList();
+  if (state.mode === 'voice') startMic(true);
 });
 
 function changeFont(delta) {
@@ -946,6 +1018,7 @@ window.teleAPI.setContentProtection(state.hideFromCapture);
 // au lancement on n'est pas en lecture → ni au-dessus, ni clic-à-travers
 updateAlwaysOnTop();
 refreshClickThrough();
+populateMicList(); // pré-remplit la liste des micros (libellés après autorisation)
 // recadre une fois les polices chargées (la hauteur du texte peut changer)
 if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(relayout);
