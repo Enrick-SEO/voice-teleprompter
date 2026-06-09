@@ -31,6 +31,7 @@ const els = {
   settingsPanel: $('#settingsPanel'),
   captureToggle: $('#captureToggle'),
   passClicksToggle: $('#passClicksToggle'),
+  barPosGroup: $('#barPosGroup'),
   focusToggle: $('#focusToggle'),
   readingPos: $('#readingPos'),
   textWidth: $('#textWidth'),
@@ -94,7 +95,10 @@ const state = {
   showInfo: true, // afficher temps + barre de progression
   hideFromCapture: true, // invisible à l'enregistrement d'écran (par défaut OUI)
   passClicks: false, // clic-à-travers hybride (clics passent sauf sur la barre)
+  barPosition: 'top', // position de la barre d'outils : top|bottom|left|right
 };
+
+const BAR_POSITIONS = ['top', 'bottom', 'left', 'right'];
 
 const WPM = 150; // mots/minute de référence pour estimer le temps de lecture
 
@@ -428,6 +432,11 @@ function applyState() {
   els.captureToggle.textContent = state.hideFromCapture ? 'Activé' : 'Désactivé';
   els.passClicksToggle.classList.toggle('toggled', state.passClicks);
   els.passClicksToggle.textContent = state.passClicks ? 'Activé' : 'Désactivé';
+  // position de la barre d'outils
+  BAR_POSITIONS.forEach((pos) => document.body.classList.toggle('bar-' + pos, state.barPosition === pos));
+  els.barPosGroup.querySelectorAll('.seg-btn').forEach((b) => {
+    b.classList.toggle('active', b.dataset.pos === state.barPosition);
+  });
   els.timeReadout.classList.toggle('hidden', !state.showInfo);
   els.progressWrap.classList.toggle('hidden', !state.showInfo);
   if (!state.focusLine && currentLineIdx >= 0 && lineOffsets[currentLineIdx]) {
@@ -638,6 +647,18 @@ els.infoToggle.addEventListener('click', () => {
   state.showInfo = !state.showInfo;
   applyState();
   saveSettings();
+});
+
+// Position de la barre d'outils (Haut / Bas / Gauche / Droite)
+els.barPosGroup.querySelectorAll('.seg-btn').forEach((b) => {
+  b.addEventListener('click', () => {
+    if (!BAR_POSITIONS.includes(b.dataset.pos)) return;
+    state.barPosition = b.dataset.pos;
+    applyState();
+    // la zone de lecture change de dimensions -> on recadre marges + lignes
+    requestAnimationFrame(relayout);
+    saveSettings();
+  });
 });
 
 els.captureToggle.addEventListener('click', () => {

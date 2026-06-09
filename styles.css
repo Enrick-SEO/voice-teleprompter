@@ -58,6 +58,60 @@ body {
   margin-left: auto;
 }
 
+/* ---- Position de la barre d'outils (Haut / Bas / Gauche / Droite) ---- */
+/* Bas : barre en bas, viewport au-dessus */
+body.bar-bottom #app {
+  flex-direction: column-reverse;
+}
+body.bar-bottom #bar {
+  border-bottom: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+/* Gauche / Droite : barre verticale (colonne défilable) sur le côté */
+body.bar-left #app {
+  flex-direction: row;
+}
+body.bar-right #app {
+  flex-direction: row-reverse;
+}
+body.bar-left #bar,
+body.bar-right #bar {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  width: auto;
+  max-width: 250px;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  gap: 10px;
+  border-bottom: none;
+}
+body.bar-left #bar {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+body.bar-right #bar {
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+/* en colonne, le groupe "actions" est ÉPINGLÉ en bas (toujours visible) :
+   les contrôles défilent au-dessus, les actions restent accessibles. */
+body.bar-left .group.actions,
+body.bar-right .group.actions {
+  margin-left: 0;
+  margin-top: auto;
+  flex-wrap: wrap;
+  position: sticky;
+  bottom: 0;
+  background: rgba(18, 20, 26, 0.97);
+  padding: 8px 0 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+/* les groupes peuvent s'enrouler si trop larges pour la colonne */
+body.bar-left #bar .group,
+body.bar-right #bar .group {
+  flex-wrap: wrap;
+}
+
 #bar label {
   font-size: 11px;
   text-transform: uppercase;
