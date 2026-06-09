@@ -457,6 +457,9 @@ select option {
 #settingsPanel {
   position: fixed; /* hors flux + hors barre : coordonnées posées par le JS */
   width: 280px;
+  max-height: calc(100vh - 16px); /* ne dépasse jamais la fenêtre */
+  overflow-y: auto; /* défile si trop d'options pour la hauteur dispo */
+  overscroll-behavior: contain;
   background: rgba(24, 27, 34, 0.98);
   backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -467,6 +470,14 @@ select option {
   gap: 12px;
   z-index: 100;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+/* barre de défilement discrète dans le menu réglages */
+#settingsPanel::-webkit-scrollbar {
+  width: 8px;
+}
+#settingsPanel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
 }
 #settingsPanel.hidden {
   display: none;

@@ -588,9 +588,17 @@ els.topBtn.addEventListener('click', () => scrollTo(0));
 function positionSettings() {
   const r = els.settingsBtn.getBoundingClientRect();
   const pw = els.settingsPanel.offsetWidth || 280;
-  const left = Math.min(r.right - pw, window.innerWidth - pw - 8);
-  els.settingsPanel.style.left = Math.max(8, left) + 'px';
-  els.settingsPanel.style.top = r.bottom + 8 + 'px';
+  const ph = els.settingsPanel.offsetHeight; // tient déjà compte du max-height (scroll)
+  const margin = 8;
+  // horizontal : sous/aligné au bouton, sans déborder
+  const left = Math.min(r.right - pw, window.innerWidth - pw - margin);
+  els.settingsPanel.style.left = Math.max(margin, left) + 'px';
+  // vertical : sous le bouton, mais remonté s'il dépasserait le bas de la fenêtre
+  let top = r.bottom + margin;
+  if (top + ph > window.innerHeight - margin) {
+    top = window.innerHeight - margin - ph;
+  }
+  els.settingsPanel.style.top = Math.max(margin, top) + 'px';
 }
 els.settingsBtn.addEventListener('click', (e) => {
   e.stopPropagation();
